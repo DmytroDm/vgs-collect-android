@@ -1,5 +1,6 @@
 package com.verygoodsecurity.vgscollect.util.extension
 
+import android.util.Log
 import com.verygoodsecurity.vgscollect.core.model.VGSCollectFieldNameMappingPolicy
 import com.verygoodsecurity.vgscollect.core.model.network.NetworkRequest
 import com.verygoodsecurity.vgscollect.core.model.network.VGSBaseRequest
@@ -56,6 +57,12 @@ internal fun VGSBaseRequest.prepareUserDataForCollecting(
     staticData: MutableMap<String, Any>,
     userData: MutableMap<String, Any>
 ): Map<String, Any> {
+    Log.d("Compose", """
+        VGSBaseRequest.prepareUserDataForCollecting(
+           $staticData,
+           $userData
+        )
+    """.trimIndent())
     val mergePolicy = when (fieldNameMappingPolicy) {
         VGSCollectFieldNameMappingPolicy.NESTED_JSON -> ArrayMergePolicy.OVERWRITE
         VGSCollectFieldNameMappingPolicy.FLAT_JSON -> ArrayMergePolicy.OVERWRITE

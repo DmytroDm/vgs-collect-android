@@ -30,6 +30,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.content.ContextCompat
 import com.verygoodsecurity.vgscollect.R
 import com.verygoodsecurity.vgscollect.core.OnVgsViewStateChangeListener
+import com.verygoodsecurity.vgscollect.core.VGSView
 import com.verygoodsecurity.vgscollect.core.api.analityc.AnalyticTracker
 import com.verygoodsecurity.vgscollect.core.model.state.FieldState
 import com.verygoodsecurity.vgscollect.core.model.state.tokenization.VGSVaultAliasFormat
@@ -54,7 +55,7 @@ import com.verygoodsecurity.vgscollect.widget.core.VisibilityChangeListener
  */
 abstract class InputFieldView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr), VGSView {
 
     private var isAttachPermitted = true
 
@@ -129,7 +130,7 @@ abstract class InputFieldView @JvmOverloads constructor(
 
     private lateinit var fieldType: FieldType
 
-    private lateinit var inputField: BaseInputField
+    internal lateinit var inputField: BaseInputField
 
     protected fun setupViewType(type: FieldType) {
         with(type) {
@@ -140,7 +141,7 @@ abstract class InputFieldView @JvmOverloads constructor(
         }
     }
 
-    internal val statePreparer: AccessibilityStatePreparer = StatePreparer()
+    override val statePreparer: AccessibilityStatePreparer = StatePreparer()
 
     internal inner class StatePreparer : AccessibilityStatePreparer {
 
@@ -394,7 +395,7 @@ abstract class InputFieldView @JvmOverloads constructor(
      *
      * @return The text used by the field.
      */
-    open fun getFieldName(): String? = inputField.tag as String?
+    override fun getFieldName(): String? = inputField.tag as String?
 
     /**
      * Sets the text to be used for data transfer to VGS proxy. Usually,
@@ -791,7 +792,7 @@ abstract class InputFieldView @JvmOverloads constructor(
      *
      * @see FieldType
      */
-    fun getFieldType(): FieldType {
+    override fun getFieldType(): FieldType {
         return fieldType
     }
 
@@ -886,8 +887,8 @@ abstract class InputFieldView @JvmOverloads constructor(
         }
     }
 
-    internal fun addStateListener(stateListener: OnVgsViewStateChangeListener) {
-        inputField.stateListener = stateListener
+    override fun addStateListener(listener: OnVgsViewStateChangeListener) {
+        inputField.stateListener = listener
     }
 
     protected fun applyPreviewIconGravity(gravity: Int) {

@@ -1,6 +1,8 @@
 package com.verygoodsecurity.vgscollect.core.storage
 
 import android.content.Context
+import android.util.Log
+import com.verygoodsecurity.vgscollect.core.VGSView
 import com.verygoodsecurity.vgscollect.core.model.VGSCollectFieldNameMappingPolicy
 import com.verygoodsecurity.vgscollect.core.model.state.FieldContent.*
 import com.verygoodsecurity.vgscollect.core.model.state.VGSFieldState
@@ -14,7 +16,6 @@ import com.verygoodsecurity.vgscollect.util.extension.allowParseArrays
 import com.verygoodsecurity.vgscollect.util.extension.isArraysIgnored
 import com.verygoodsecurity.vgscollect.util.extension.merge
 import com.verygoodsecurity.vgscollect.util.extension.toFlatMap
-import com.verygoodsecurity.vgscollect.view.InputFieldView
 import com.verygoodsecurity.vgscollect.view.core.serializers.VGSDateRangeSeparateSerializer
 import com.verygoodsecurity.vgscollect.view.core.serializers.VGSExpDateSeparateSerializer
 
@@ -75,6 +76,12 @@ internal class InternalStorage(
         val list = mutableListOf<Pair<String, String>>()
 
         if (fieldsIgnore.not()) {
+            Log.d("Compose", """
+                InternalStorage:getAssociatedList
+                
+                fieldsStorage.getItems() = ${fieldsStorage.getItems()}
+                stateToAssociatedList = ${stateToAssociatedList(fieldsStorage.getItems())}
+            """.trimIndent())
             list.addAll(stateToAssociatedList(fieldsStorage.getItems()))
         }
 
@@ -82,6 +89,7 @@ internal class InternalStorage(
             list.merge(fileStorage.getAssociatedList())
         }
 
+        Log.d("Compose", "InternalStorage:getAssociatedList, return $list")
         return list
     }
 
@@ -94,8 +102,9 @@ internal class InternalStorage(
         emitter.attachStateChangeListener(fieldStateListener)
     }
 
-    fun performSubscription(view: InputFieldView?) {
+    fun performSubscription(view: VGSView?) {
         view?.let {
+            Log.d("Compose", "view = $view")
             fieldsDependencyDispatcher.addDependencyListener(
                 it.getFieldType(),
                 it.statePreparer.getDependencyListener()
@@ -104,10 +113,10 @@ internal class InternalStorage(
         }
     }
 
-    fun unsubscribe(view: InputFieldView?) {
+    fun unsubscribe(view: VGSView?) {
         view?.let {
             it.statePreparer.unsubscribe()
-            fieldsStorage.remove(it.statePreparer.getView().id)
+            fieldsStorage.remove(it.statePreparer.getId())
         }
     }
 

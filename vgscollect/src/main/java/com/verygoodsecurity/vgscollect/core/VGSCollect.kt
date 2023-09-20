@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.annotation.IntRange
 import androidx.annotation.VisibleForTesting
 import com.verygoodsecurity.vgscollect.R
@@ -162,7 +163,7 @@ class VGSCollect {
      *
      * @param view base class for VGS secure fields.
      */
-    fun bindView(view: InputFieldView?) {
+    fun bindView(view: VGSView?) {
         view?.statePreparer?.let {
             externalDependencyDispatcher.addDependencyListener(
                 view.getFieldName(),
@@ -182,7 +183,7 @@ class VGSCollect {
      *
      * @param views VGS secure views.
      */
-    fun bindView(vararg views: InputFieldView?) {
+    fun bindView(vararg views: VGSView?) {
         views.forEach {
             bindView(it)
         }
@@ -193,7 +194,7 @@ class VGSCollect {
      *
      * @param view base class for VGS secure fields.
      */
-    fun unbindView(view: InputFieldView?) {
+    fun unbindView(view: VGSView?) {
         view?.let {
             storage.unsubscribe(view)
         }
@@ -204,7 +205,7 @@ class VGSCollect {
      *
      * @param views VGS secure views.
      */
-    fun unbindView(vararg views: InputFieldView?) {
+    fun unbindView(vararg views: VGSView?) {
         views.forEach {
             unbindView(it)
         }
@@ -386,6 +387,7 @@ class VGSCollect {
                 )
             else -> {
                 val data = prepareDataToSubmit(request)
+                Log.d("Compose", "VGSCollect:collectUserData, data = $data")
 
                 submitEvent(
                     true,
@@ -598,7 +600,7 @@ class VGSCollect {
         client = c
     }
 
-    private fun initField(view: InputFieldView?) {
+    private fun initField(view: VGSView?) {
         val m = view?.getFieldType()?.getAnalyticName()?.run {
             with(mutableMapOf<String, String>()) {
                 put("field", this@run)

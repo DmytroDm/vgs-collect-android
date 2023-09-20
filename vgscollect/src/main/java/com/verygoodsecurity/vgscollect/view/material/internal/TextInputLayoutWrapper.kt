@@ -110,9 +110,8 @@ internal class TextInputLayoutWrapper @JvmOverloads constructor(
                     applyLayoutParams(this)
                     this
                 }
-                is InputFieldView -> this.statePreparer.let{
-                    val v = it.getView()
-                    return applyAndReturnDefaultLayoutParams(child, v)
+                is InputFieldView -> this.inputField.let{
+                    return applyAndReturnDefaultLayoutParams(child, it)
                 }
                 is ViewGroup -> this
                 else -> {

@@ -13,10 +13,8 @@ import java.util.*
 sealed class FieldContent {
 
     var rawData: String? = null
-        internal set
 
     var data: String? = null
-        internal set
 
     internal var vaultStorage: VGSVaultStorageType = VGSVaultStorageType.PERSISTENT
     internal var vaultAliasFormat: VGSVaultAliasFormat = VGSVaultAliasFormat.UUID
@@ -64,7 +62,13 @@ sealed class FieldContent {
 
     class SSNContent : FieldContent()
 
-    class InfoContent : FieldContent()
+    class InfoContent: FieldContent {
+
+        @Suppress("ConvertSecondaryConstructorToPrimary")
+        constructor(data: String? = null): super() {
+            this.data = data
+        }
+    }
 
     override fun hashCode(): Int {
         return data.hashCode()

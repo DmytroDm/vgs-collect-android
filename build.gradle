@@ -13,6 +13,7 @@ buildscript {
         classpath gradleLibs.maven.publish
         classpath gradleLibs.dokka
         classpath gradleLibs.detekt
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.22'
     }
 }
 

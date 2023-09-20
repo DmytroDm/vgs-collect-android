@@ -416,7 +416,7 @@ internal class InputLayoutStateImpl(
     }
 
     internal fun addChildView(child: InputFieldView?) {
-        (child?.statePreparer?.getView() as? BaseInputField)?.apply {
+        child?.inputField?.apply {
 
             val limitations = produceInnerViewPaddingLimitations(boxBackgroundMode, context)
             setMinimumPaddingLimitations(limitations.first, limitations.second)

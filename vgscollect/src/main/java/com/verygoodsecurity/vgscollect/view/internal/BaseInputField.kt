@@ -309,7 +309,7 @@ internal abstract class BaseInputField(context: Context) : TextInputEditText(con
 
         when (nextView) {
             null -> return
-            is InputFieldView -> nextView.statePreparer.getView().requestFocus()
+            is InputFieldView -> nextView.inputField.requestFocus()
             is BaseInputField -> nextView.requestFocus()
             else -> nextView.requestFocus()
         }

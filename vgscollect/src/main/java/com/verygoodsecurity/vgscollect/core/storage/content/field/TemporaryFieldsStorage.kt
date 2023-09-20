@@ -1,5 +1,6 @@
 package com.verygoodsecurity.vgscollect.core.storage.content.field
 
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import com.verygoodsecurity.vgscollect.core.OnVgsViewStateChangeListener
 import com.verygoodsecurity.vgscollect.core.model.state.*
@@ -50,6 +51,7 @@ internal class TemporaryFieldsStorage(
 
     override fun performSubscription() = object: OnVgsViewStateChangeListener {
         override fun emit(viewId: Int, state: VGSFieldState) {
+            Log.d("Compose", "TemporaryFieldsStorage:OnVgsViewStateChangeListener, emit($viewId, $state)")
             if (contractor.checkState(state)) {
                 addItem(viewId, state)
             }
@@ -57,6 +59,7 @@ internal class TemporaryFieldsStorage(
     }
 
     override fun addItem(viewId: Int, newState: VGSFieldState) {
+        Log.d("Compose", "TemporaryFieldsStorage:addItem($viewId, $newState)")
         processNewState(viewId, newState)
     }
 
