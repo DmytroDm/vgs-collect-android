@@ -22,9 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.verygoodsecurity.demoapp.compose.theme.Theme
 import com.verygoodsecurity.vgscollect.compose.VGSTextField
 import com.verygoodsecurity.vgscollect.core.VGSCollect
-import com.verygoodsecurity.vgscollect.core.VgsCollectResponseListener
 import com.verygoodsecurity.vgscollect.core.model.network.VGSRequest
-import com.verygoodsecurity.vgscollect.core.model.network.VGSResponse
 import kotlinx.coroutines.launch
 
 class ComposeActivity : ComponentActivity() {

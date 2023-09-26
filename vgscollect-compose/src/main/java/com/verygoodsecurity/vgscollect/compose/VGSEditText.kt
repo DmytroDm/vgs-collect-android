@@ -91,17 +91,17 @@ fun VGSTextField(
                 override fun getId(): Int = 1 // TODO: Implement unique id
 
                 override fun getView(): View {
-                    TODO("Implement analytics")
+                    TODO("Refactor(required by old view, not needed here)")
                 }
 
                 override fun unsubscribe() {
-                    // TODO: Implement analytics
+                    listener = null
                 }
 
                 override fun getDependencyListener() =  object : DependencyListener {
 
                     override fun dispatchDependencySetting(dependency: Dependency) {
-                        // TODO: Implement
+                        // TODO: Disaptch scan result
                     }
                 }
 
