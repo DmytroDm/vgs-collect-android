@@ -40,7 +40,7 @@ import com.verygoodsecurity.vgscollect.view.AccessibilityStatePreparer
 import com.verygoodsecurity.vgscollect.view.card.FieldType
 
 private const val INITIAL_VALUE = "INITIAL_VALUE"
-private const val FIELD_NAME = "FIELD_NAME"
+private const val FIELD_NAME = "field_name"
 
 @Composable
 fun VGSTextField(
