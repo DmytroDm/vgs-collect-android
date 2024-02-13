@@ -11,6 +11,7 @@ import com.verygoodsecurity.demoapp.date_range_activity.DateRangeActivity
 import com.verygoodsecurity.demoapp.fragment_case.VGSCollectFragmentActivity
 import com.verygoodsecurity.demoapp.google_pay.GooglePayActivity
 import com.verygoodsecurity.demoapp.payopt.PaymentOptimizationActivity
+import com.verygoodsecurity.demoapp.plaid.PlaidIntegrationActivity
 import com.verygoodsecurity.demoapp.tokenization.TokenizationActivity
 import com.verygoodsecurity.demoapp.viewpager_case.VGSViewPagerActivity
 
@@ -48,6 +49,9 @@ class StartActivity : AppCompatActivity(R.layout.activity_start) {
         }
         binding.llDateRangeViewPagerFlow.setOnClickListener {
             startActivity(DateRangeActivity::class.java)
+        }
+        binding.llPlaidIntegrationFlow.setOnClickListener {
+            startActivity(PlaidIntegrationActivity::class.java)
         }
         binding.llComposeFlow.setOnClickListener {
             startActivity(ComposeActivity::class.java)

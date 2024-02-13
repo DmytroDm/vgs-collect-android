@@ -32,6 +32,9 @@
     <string name="start_compose_title">Compose</string>
     <string name="start_compose_description">Example of collecting date wit Jetpack Compose.</string>
 
+    <string name="start_plaid_integration_title">Plaid Integration</string>
+    <string name="start_plaid_integration_description">Example of integration Collect SDK with Plaid SDK</string>
+
     <string name="start_payopt">Payopt</string>
     <string name="start_payopt_description">Collecting data with payment optimization example.</string>
 

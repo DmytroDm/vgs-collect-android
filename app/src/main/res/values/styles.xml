@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/fiord</item>
@@ -9,6 +9,12 @@
         <item name="android:textColorSecondary">@color/fiord</item>
         <item name="actionBarStyle">@style/ActionBarStyle</item>
         <item name="snackbarTextViewStyle">@style/SnackBarTextViewStyle</item>
+    </style>
+
+    <style name="AppTheme.Plaid" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorSecondary">@color/aquamarine</item>
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
     </style>
 
     <style name="ActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Primary">

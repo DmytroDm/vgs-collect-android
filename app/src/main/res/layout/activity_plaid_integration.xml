@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:src="@drawable/baseline_arrow_back_24"
+            app:tint="@color/aquamarine" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Company"
+            android:textAppearance="?textAppearanceHeadline6"
+            android:textColor="@color/aquamarine" />
+    </FrameLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Payment details"
+                android:textAppearance="?textAppearanceSubtitle1"
+                tools:ignore="HardcodedText" />
+
+            <com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout
+                android:id="@+id/vgsTilNumber"
+                style="@style/VGSCollect.Widget.TextInputLayout.OutlineBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:boxStrokeColor="@color/aquamarine"
+                app:errorEnabled="false"
+                app:hintEnabled="false">
+
+                <com.verygoodsecurity.vgscollect.widget.VGSCardNumberEditText
+                    android:id="@+id/vgsTiedNumber"
+                    style="@style/VGSCollect.Widget.TextInputEditText.OutlineBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:fieldName="number"
+                    app:hint="Card number"
+                    app:numberDivider=" "
+                    app:text="1113333345678912" />
+            </com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout>
+
+            <com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout
+                android:id="@+id/vgsTilName"
+                style="@style/VGSCollect.Widget.TextInputLayout.OutlineBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:boxStrokeColor="@color/aquamarine"
+                app:errorEnabled="false"
+                app:hintEnabled="false">
+
+                <com.verygoodsecurity.vgscollect.widget.PersonNameEditText
+                    android:id="@+id/vgsTiedName"
+                    style="@style/VGSCollect.Widget.TextInputEditText.OutlineBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:fieldName="name"
+                    app:hint="Card holder"
+                    app:text="John Doe" />
+            </com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout
+                    android:id="@+id/vgsTilExpiry"
+                    style="@style/VGSCollect.Widget.TextInputLayout.OutlineBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:boxStrokeColor="@color/aquamarine"
+                    app:errorEnabled="false"
+                    app:hintEnabled="false">
+
+                    <com.verygoodsecurity.vgscollect.widget.ExpirationDateEditText
+                        android:id="@+id/vgsTiedExpiry"
+                        style="@style/VGSCollect.Widget.TextInputEditText.OutlineBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nextFocusRight="@id/vgsTiedCvc"
+                        app:datePattern="MM/yy"
+                        app:datePickerModes="input"
+                        app:fieldName="expiry"
+                        app:hint="Expiration date"
+                        app:imeOptions="actionNext"
+                        app:text="01/27" />
+                </com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout>
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
+
+                <com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout
+                    android:id="@+id/vgsTilCvc"
+                    style="@style/VGSCollect.Widget.TextInputLayout.OutlineBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:boxStrokeColor="@color/aquamarine"
+                    app:errorEnabled="false"
+                    app:hintEnabled="false">
+
+                    <com.verygoodsecurity.vgscollect.widget.CardVerificationCodeEditText
+                        android:id="@+id/vgsTiedCvc"
+                        style="@style/VGSCollect.Widget.TextInputEditText.OutlineBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldName="cvc"
+                        app:hint="CVC"
+                        app:text="344" />
+                </com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout>
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@android:color/white"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/aquamarine"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Merchant uses Plaid to connect with your bank. By creating an account, you agree to these terms"
+                        android:textAppearance="?textAppearanceBody2"
+                        tools:ignore="HardcodedText" />
+
+                    <CheckBox
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#363636"
+                        android:checked="true"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="0dp"
+                        android:text="Yes, look for my qualifying accounts for this purchase"
+                        android:textAppearance="?textAppearanceCaption"
+                        app:buttonTint="@color/aquamarine"
+                        tools:ignore="HardcodedText" />
+
+                    <CheckBox
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#363636"
+                        android:checked="true"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="0dp"
+                        android:text="Yes, I already have Plaid account"
+                        android:textAppearance="?textAppearanceCaption"
+                        app:buttonTint="@color/aquamarine"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNext"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="16dp"
+                android:padding="16dp"
+                android:text="Next"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                app:backgroundTint="@color/aquamarine"
+                app:cornerRadius="36dp"
+                tools:ignore="HardcodedText" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@color/pattensBlue"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mbGroupCodeExampleType">
+
+                <include layout="@layout/code_example_layout" />
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

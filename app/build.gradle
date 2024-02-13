@@ -90,6 +90,7 @@ dependencies {
     implementation project(":vgscollect")
     implementation project(":vgscollect-cardio")
     implementation project(":vgscollect-blinkcard")
+    implementation project(":vgscollect-plaid")
 
     implementation 'com.google.android.gms:play-services-wallet:19.2.1'
 
@@ -112,6 +113,7 @@ dependencies {
     implementation demoLibs.androidx.preference.ktx
     implementation demoLibs.codeview
     implementation demoLibs.fuel
+    implementation demoLibs.fuel.coroutines
 
     implementation demoLibs.espresso.idling.resource
 
