@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/VGSCollect.Widget.TextInputLayout.OutlineBox"
+    app:errorEnabled="false"
+    app:hintEnabled="false"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.verygoodsecurity.vgscollect.widget.VGSEditText
+        app:hint="VGS"
+        style="@style/VGSCollect.Widget.TextInputEditText.OutlineBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout>

@@ -54,7 +54,7 @@ class StartActivity : AppCompatActivity(R.layout.activity_start) {
             startActivity(ComposeActivity::class.java)
         }
         binding.llComposeFragmentFlow.setOnClickListener {
-            startActivity(ComposeFragmentActivity::class.java)
+            startActivity(ExpoDemo::class.java)
         }
     }
 

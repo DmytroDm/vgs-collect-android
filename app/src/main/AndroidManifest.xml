@@ -80,6 +80,10 @@
             android:label="Compose Demo (Activity)" />
 
         <activity
+            android:name=".ExpoDemo"
+            android:label="Expo Demo" />
+
+        <activity
             android:name=".compose.fragment_case.ComposeFragmentActivity"
             android:label="Compose Demo (Fragment)" />
 

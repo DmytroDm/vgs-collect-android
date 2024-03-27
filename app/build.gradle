@@ -2,6 +2,11 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'io.gitlab.arturbosch.detekt'
+    id 'kotlin-kapt'
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 android {
@@ -98,6 +103,9 @@ dependencies {
     implementation libs.material
 
     implementation platform('androidx.compose:compose-bom:2024.02.01')
+
+    implementation "com.airbnb.android:epoxy:5.1.4"
+    kapt "com.airbnb.android:epoxy-processor:5.1.4"
 
     implementation libs.compose.activity
     implementation libs.compose.material
