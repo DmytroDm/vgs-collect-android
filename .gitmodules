@@ -1,0 +1,3 @@
+[submodule "vgs-mobile-networking"]
+	path = vgs-mobile-networking
+	url = https://github.com/DmytroDm/vgs-mobile-networking.git
