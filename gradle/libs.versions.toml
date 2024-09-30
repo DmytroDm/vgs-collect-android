@@ -26,6 +26,8 @@ android-application = { id = 'com.android.application', version.ref = 'agp' }
 android-library = { id = 'com.android.library', version.ref = 'agp' }
 kotlin-android = { id = 'org.jetbrains.kotlin.android', version.ref = 'kotlin' }
 kotlin-parcelize = { id = 'org.jetbrains.kotlin.plugin.parcelize', version.ref = 'kotlin' }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 maven-publish = { id = 'com.vanniktech.maven.publish', version.ref = 'mavenPublish' }
 dokka = { id = 'org.jetbrains.dokka', version.ref = 'dokka' }
 detekt = { id = 'io.gitlab.arturbosch.detekt', version.ref = 'detekt' }
@@ -49,3 +51,4 @@ codeview = { group = 'com.github.kbiakov', name = 'CodeView-Android', version.re
 fuel = { group = 'com.github.kittinunf.fuel', name = 'fuel', version.ref = 'fuel' }
 espresso-idling-resource = { group = 'androidx.test.espresso', name = 'espresso-idling-resource', version.ref = 'espresso-idling-resource' }
 play-services-wallet = { group = 'com.google.android.gms', name = 'play-services-wallet', version.ref = 'wallet' }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

@@ -73,6 +73,8 @@ detekt {
 }
 
 dependencies {
+    implementation project(':vgs-mobile-networking:shared')
+
     api libs.material
     api libs.okhttp
 
