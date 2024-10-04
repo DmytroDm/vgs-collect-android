@@ -8,8 +8,8 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
+import com.verygoodsecurity.mobile_networking.model.VGSError
 import com.verygoodsecurity.vgscollect.app.FilePickerActivity
-import com.verygoodsecurity.vgscollect.core.model.network.VGSError
 import com.verygoodsecurity.vgscollect.core.model.state.FileState
 import com.verygoodsecurity.vgscollect.util.extension.NotEnoughMemoryException
 import com.verygoodsecurity.vgscollect.util.extension.queryOptional

@@ -1,18 +1,21 @@
 package com.verygoodsecurity.vgscollect.core.api.analityc
 
 import android.os.Build
+import com.verygoodsecurity.mobile_networking.API
+import com.verygoodsecurity.mobile_networking.model.VGSHttpBodyFormat
 import com.verygoodsecurity.vgscollect.BuildConfig
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
-import com.verygoodsecurity.vgscollect.core.api.VGSHttpBodyFormat
-import com.verygoodsecurity.vgscollect.core.api.VgsApiTemporaryStorageImpl
 import com.verygoodsecurity.vgscollect.core.api.analityc.action.Action
-import com.verygoodsecurity.vgscollect.core.api.client.ApiClient
+import com.verygoodsecurity.vgscollect.core.model.network.VGSHttpMethod
 import com.verygoodsecurity.vgscollect.core.model.network.VGSRequest
 import com.verygoodsecurity.vgscollect.util.extension.toAnalyticRequest
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import java.util.Locale
+import java.util.UUID
 import java.util.concurrent.Executors
 
 internal class CollectActionTracker(
+    val scope: CoroutineScope,
     val tnt: String,
     val environment: String,
     val formId: String,
@@ -25,14 +28,12 @@ internal class CollectActionTracker(
         val id = "${UUID.randomUUID()}"
     }
 
-    private val client: ApiClient by lazy {
-        return@lazy ApiClient.newHttpClient(false, VgsApiTemporaryStorageImpl())
-    }
+    private val api: API = API()
 
     override fun logEvent(action: Action) {
         if (isEnabled) {
             val event = action.run {
-                val sender = Event(client, tnt, environment, formId, isSatelliteMode)
+                val sender = Event(scope, api, tnt, environment, formId, isSatelliteMode)
                 sender.map = getAttributes()
                 sender
             }
@@ -42,7 +43,8 @@ internal class CollectActionTracker(
     }
 
     private class Event(
-        private val client: ApiClient,
+        private val scope: CoroutineScope,
+        private val api: API,
         private val tnt: String,
         private val environment: String,
         private val formId: String,
@@ -84,12 +86,14 @@ internal class CollectActionTracker(
         override fun run() {
             val r = VGSRequest.VGSRequestBuilder()
                 .setPath(ENDPOINT)
-                .setMethod(HTTPMethod.POST)
+                .setMethod(VGSHttpMethod.POST)
                 .setCustomData(map)
                 .setFormat(VGSHttpBodyFormat.X_WWW_FORM_URLENCODED)
                 .build()
 
-            client.enqueue(r.toAnalyticRequest(URL))
+            scope.launch {
+                api.execute(r.toAnalyticRequest(URL))
+            }
         }
 
         companion object {

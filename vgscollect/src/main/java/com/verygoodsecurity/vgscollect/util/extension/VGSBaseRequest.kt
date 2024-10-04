@@ -1,15 +1,17 @@
 package com.verygoodsecurity.vgscollect.util.extension
 
+import com.verygoodsecurity.mobile_networking.model.HTTPMethod
+import com.verygoodsecurity.mobile_networking.model.NetworkRequest
 import com.verygoodsecurity.vgscollect.core.model.VGSCollectFieldNameMappingPolicy
-import com.verygoodsecurity.vgscollect.core.model.network.NetworkRequest
 import com.verygoodsecurity.vgscollect.core.model.network.VGSBaseRequest
+import com.verygoodsecurity.vgscollect.core.model.network.VGSHttpMethod
 import com.verygoodsecurity.vgscollect.core.model.state.ArrayMergePolicy
 
 internal const val DEFAULT_CONNECTION_TIME_OUT = 60_000L
 
 internal fun VGSBaseRequest.toAnalyticRequest(url: String): NetworkRequest {
     return NetworkRequest(
-        method,
+        method.map(),
         url concatWithSlash path,
         customHeader,
         customData.toJSON().toString().toBase64(),
@@ -40,7 +42,7 @@ internal fun VGSBaseRequest.toNetworkRequest(
     }
 
     return NetworkRequest(
-        method,
+        method.map(),
         url,
         customHeader,
         requestData?.toJSON()?.toString() ?: customData,
@@ -67,4 +69,12 @@ internal fun VGSBaseRequest.prepareUserDataForCollecting(
         deepMerge(customData, mergePolicy)
         deepMerge(userData, mergePolicy)
     }
+}
+
+internal fun VGSHttpMethod.map() = when(this) {
+    VGSHttpMethod.GET -> HTTPMethod.GET
+    VGSHttpMethod.PUT -> HTTPMethod.PUT
+    VGSHttpMethod.POST -> HTTPMethod.POST
+    VGSHttpMethod.PATCH -> HTTPMethod.PATCH
+    VGSHttpMethod.DELETE -> HTTPMethod.DELETE
 }

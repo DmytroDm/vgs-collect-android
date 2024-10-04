@@ -1,9 +1,10 @@
 package com.verygoodsecurity.vgscollect.core.model.network.tokenization
 
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
-import com.verygoodsecurity.vgscollect.core.api.VGSHttpBodyFormat
+import com.verygoodsecurity.mobile_networking.model.HTTPMethod
+import com.verygoodsecurity.mobile_networking.model.VGSHttpBodyFormat
 import com.verygoodsecurity.vgscollect.core.model.VGSCollectFieldNameMappingPolicy
 import com.verygoodsecurity.vgscollect.core.model.network.VGSBaseRequest
+import com.verygoodsecurity.vgscollect.core.model.network.VGSHttpMethod
 import com.verygoodsecurity.vgscollect.util.extension.DEFAULT_CONNECTION_TIME_OUT
 import com.verygoodsecurity.vgscollect.util.extension.TOKENIZATION_PATH
 
@@ -16,7 +17,7 @@ import com.verygoodsecurity.vgscollect.util.extension.TOKENIZATION_PATH
  * @param routeId Defines route id for submitting data.
  */
 data class VGSTokenizationRequest internal constructor(
-    override val method: HTTPMethod,
+    override val method: VGSHttpMethod,
     override val path: String,
     override val customHeader: Map<String, String>,
     override val customData: Map<String, Any>,
@@ -34,7 +35,7 @@ data class VGSTokenizationRequest internal constructor(
      * dialog theme.
      */
     class VGSRequestBuilder {
-        private var method: HTTPMethod = HTTPMethod.POST
+        private var method: VGSHttpMethod = VGSHttpMethod.POST
         private var path: String = TOKENIZATION_PATH
         private val customHeader: HashMap<String, String> = HashMap()
         private val customData: HashMap<String, Any> = HashMap()

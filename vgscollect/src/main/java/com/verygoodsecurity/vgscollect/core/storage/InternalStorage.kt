@@ -23,7 +23,7 @@ import com.verygoodsecurity.vgscollect.view.core.serializers.VGSExpDateSeparateS
 /** @suppress */
 internal class InternalStorage(
     context: Context,
-    private val errorListener: StorageErrorListener? = null
+    errorListener: StorageErrorListener? = null
 ) {
     private val fieldsDependencyDispatcher: DependencyDispatcher
 
@@ -40,7 +40,7 @@ internal class InternalStorage(
             fileStorage = this
         }
 
-        val fieldStateContractor = FieldStateContractor(context)
+        val fieldStateContractor = FieldStateContractor()
         with(TemporaryFieldsStorage(fieldStateContractor)) {
             attachFieldDependencyObserver(fieldsDependencyDispatcher)
 

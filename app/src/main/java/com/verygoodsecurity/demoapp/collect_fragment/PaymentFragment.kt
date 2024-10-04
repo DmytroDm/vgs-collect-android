@@ -12,9 +12,9 @@ import com.verygoodsecurity.demoapp.R
 import com.verygoodsecurity.demoapp.databinding.FragmentPaymentBinding
 import com.verygoodsecurity.demoapp.utils.idling.GlobalIdlingResource
 import com.verygoodsecurity.vgscollect.core.Environment
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
 import com.verygoodsecurity.vgscollect.core.VGSCollect
 import com.verygoodsecurity.vgscollect.core.VgsCollectResponseListener
+import com.verygoodsecurity.vgscollect.core.model.network.VGSHttpMethod
 import com.verygoodsecurity.vgscollect.core.model.network.VGSRequest
 import com.verygoodsecurity.vgscollect.core.model.network.VGSResponse
 import com.verygoodsecurity.vgscollect.core.model.state.FieldState
@@ -182,7 +182,7 @@ class PaymentFragment : Fragment(), VgsCollectResponseListener, OnFieldStateChan
         headers["some-headers"] = "dynamic-header"
 
         val request: VGSRequest = VGSRequest.VGSRequestBuilder()
-            .setMethod(HTTPMethod.POST)
+            .setMethod(VGSHttpMethod.POST)
             .setPath(path)
             .setCustomHeader(headers)
             .setCustomData(customData)

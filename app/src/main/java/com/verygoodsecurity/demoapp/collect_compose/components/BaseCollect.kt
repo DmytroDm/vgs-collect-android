@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputLayout
 import com.verygoodsecurity.demoapp.R
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
 import com.verygoodsecurity.vgscollect.core.VGSCollect
+import com.verygoodsecurity.vgscollect.core.model.network.VGSHttpMethod
 import com.verygoodsecurity.vgscollect.view.InputFieldView
 import com.verygoodsecurity.vgscollect.widget.VGSTextInputLayout
 import com.verygoodsecurity.vgscollect.widget.compose.CardVerificationCodeEditTextWrapper
@@ -89,7 +89,7 @@ fun BaseCollect(
         OutlinedButton(
             modifier = Modifier.align(alignment = Alignment.End),
             contentPadding = PaddingValues(16.dp),
-            onClick = { collect?.asyncSubmit(path, HTTPMethod.POST) }
+            onClick = { collect?.asyncSubmit(path, VGSHttpMethod.POST) }
         ) {
             Text(
                 text = "SUBMIT",

@@ -1,6 +1,5 @@
 package com.verygoodsecurity.vgscollect.api
 
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
 import com.verygoodsecurity.vgscollect.core.api.VGSHttpBodyFormat
 import com.verygoodsecurity.vgscollect.core.model.network.*
 import com.verygoodsecurity.vgscollect.util.extension.toNetworkRequest

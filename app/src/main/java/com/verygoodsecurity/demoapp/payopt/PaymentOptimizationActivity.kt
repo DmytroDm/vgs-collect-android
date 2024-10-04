@@ -16,9 +16,9 @@ import com.verygoodsecurity.demoapp.payopt.decorator.MarginItemDecoration
 import com.verygoodsecurity.demoapp.payopt.model.Card
 import com.verygoodsecurity.demoapp.payopt.source.RemoteDataSource
 import com.verygoodsecurity.demoapp.payopt.source.ResponseListener
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
 import com.verygoodsecurity.vgscollect.core.VGSCollect
 import com.verygoodsecurity.vgscollect.core.VgsCollectResponseListener
+import com.verygoodsecurity.vgscollect.core.model.network.VGSHttpMethod
 import com.verygoodsecurity.vgscollect.core.model.network.VGSRequest
 import com.verygoodsecurity.vgscollect.core.model.network.VGSResponse
 import com.verygoodsecurity.vgscollect.view.InputFieldView
@@ -126,7 +126,7 @@ class PaymentOptimizationActivity : AppCompatActivity(),
     private fun createFinInstrument() {
         collect?.asyncSubmit(
             VGSRequest.VGSRequestBuilder()
-                .setMethod(HTTPMethod.POST)
+                .setMethod(VGSHttpMethod.POST)
                 .setPath("/financial_instruments")
                 .setCustomHeader(mapOf("Authorization" to "Bearer $accessToken"))
                 .build()

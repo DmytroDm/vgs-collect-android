@@ -1,7 +1,6 @@
 package com.verygoodsecurity.vgscollect.core.model.network
 
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
-import com.verygoodsecurity.vgscollect.core.api.VGSHttpBodyFormat
+import com.verygoodsecurity.mobile_networking.model.VGSHttpBodyFormat
 import com.verygoodsecurity.vgscollect.core.model.VGSCollectFieldNameMappingPolicy
 import com.verygoodsecurity.vgscollect.util.extension.DEFAULT_CONNECTION_TIME_OUT
 
@@ -18,7 +17,7 @@ import com.verygoodsecurity.vgscollect.util.extension.DEFAULT_CONNECTION_TIME_OU
  * @param routeId Defines route id for submitting data.
  */
 data class VGSRequest internal constructor(
-    override val method: HTTPMethod,
+    override val method: VGSHttpMethod,
     override val path: String,
     override val customHeader: Map<String, String>,
     override val customData: Map<String, Any>,
@@ -36,7 +35,7 @@ data class VGSRequest internal constructor(
      * dialog theme.
      */
     class VGSRequestBuilder {
-        private var method: HTTPMethod = HTTPMethod.POST
+        private var method: VGSHttpMethod = VGSHttpMethod.POST
         private var path: String = ""
         private val customHeader: HashMap<String, String> = HashMap()
         private val customData: HashMap<String, Any> = HashMap()
@@ -95,7 +94,7 @@ data class VGSRequest internal constructor(
          * @param method HTTP method
          * @return current builder instance
          */
-        fun setMethod(method: HTTPMethod): VGSRequestBuilder {
+        fun setMethod(method: VGSHttpMethod): VGSRequestBuilder {
             this.method = method
             return this
         }

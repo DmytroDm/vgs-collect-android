@@ -3,11 +3,10 @@ package com.verygoodsecurity.vgscollect.api
 import com.verygoodsecurity.vgscollect.core.*
 import com.verygoodsecurity.vgscollect.core.api.VGSHttpBodyFormat
 import com.verygoodsecurity.vgscollect.core.api.client.ApiClient
-import com.verygoodsecurity.vgscollect.core.model.network.NetworkRequest
 import org.junit.Test
 import org.mockito.Mockito
 
-class ApiClientTest {
+class ApiAPITest {
 
     @Test
     fun test_api_execute() {

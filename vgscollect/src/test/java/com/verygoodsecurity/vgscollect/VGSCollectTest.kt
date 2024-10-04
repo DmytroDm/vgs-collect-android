@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import com.verygoodsecurity.vgscollect.Utils.capture
 import com.verygoodsecurity.vgscollect.app.BaseTransmitActivity
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
 import com.verygoodsecurity.vgscollect.core.VGSCollect
 import com.verygoodsecurity.vgscollect.core.VgsCollectResponseListener
 import com.verygoodsecurity.vgscollect.core.api.VGSHttpBodyFormat

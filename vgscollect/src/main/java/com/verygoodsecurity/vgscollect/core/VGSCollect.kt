@@ -3,17 +3,17 @@ package com.verygoodsecurity.vgscollect.core
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.IntRange
 import androidx.annotation.VisibleForTesting
-import com.verygoodsecurity.mobile_networking.Greeting
+import com.verygoodsecurity.mobile_networking.API
+import com.verygoodsecurity.mobile_networking.model.VGSError
+import com.verygoodsecurity.mobile_networking.model.VGSHttpBodyFormat
 import com.verygoodsecurity.vgscollect.R
 import com.verygoodsecurity.vgscollect.VGSCollectLogger
 import com.verygoodsecurity.vgscollect.app.BaseTransmitActivity
 import com.verygoodsecurity.vgscollect.core.api.PORT_MAX_VALUE
 import com.verygoodsecurity.vgscollect.core.api.PORT_MIN_VALUE
-import com.verygoodsecurity.vgscollect.core.api.VGSHttpBodyFormat
+import com.verygoodsecurity.vgscollect.core.api.VgsApiTemporaryStorageImpl
 import com.verygoodsecurity.vgscollect.core.api.analityc.AnalyticTracker
 import com.verygoodsecurity.vgscollect.core.api.analityc.CollectActionTracker
 import com.verygoodsecurity.vgscollect.core.api.analityc.action.AttachFileAction
@@ -23,11 +23,10 @@ import com.verygoodsecurity.vgscollect.core.api.analityc.action.ResponseAction
 import com.verygoodsecurity.vgscollect.core.api.analityc.action.ScanAction
 import com.verygoodsecurity.vgscollect.core.api.analityc.action.SubmitAction
 import com.verygoodsecurity.vgscollect.core.api.analityc.utils.toAnalyticStatus
-import com.verygoodsecurity.vgscollect.core.api.client.ApiClient
 import com.verygoodsecurity.vgscollect.core.api.client.ApiClient.Companion.generateAgentHeader
 import com.verygoodsecurity.vgscollect.core.api.client.extension.isCodeSuccessful
 import com.verygoodsecurity.vgscollect.core.api.client.extension.isHttpStatusCode
-import com.verygoodsecurity.vgscollect.core.api.equalsUrl
+import com.verygoodsecurity.vgscollect.core.api.client.extension.toVGSResponse
 import com.verygoodsecurity.vgscollect.core.api.isIpAllowed
 import com.verygoodsecurity.vgscollect.core.api.isURLValid
 import com.verygoodsecurity.vgscollect.core.api.isValidIp
@@ -40,10 +39,9 @@ import com.verygoodsecurity.vgscollect.core.model.VGSCollectFieldNameMappingPoli
 import com.verygoodsecurity.vgscollect.core.model.VGSCollectFieldNameMappingPolicy.NESTED_JSON
 import com.verygoodsecurity.vgscollect.core.model.VGSHashMapWrapper
 import com.verygoodsecurity.vgscollect.core.model.network.VGSBaseRequest
-import com.verygoodsecurity.vgscollect.core.model.network.VGSError
+import com.verygoodsecurity.vgscollect.core.model.network.VGSHttpMethod
 import com.verygoodsecurity.vgscollect.core.model.network.VGSRequest
 import com.verygoodsecurity.vgscollect.core.model.network.VGSResponse
-import com.verygoodsecurity.vgscollect.core.model.network.toVGSResponse
 import com.verygoodsecurity.vgscollect.core.model.network.tokenization.VGSTokenizationRequest
 import com.verygoodsecurity.vgscollect.core.model.state.FieldState
 import com.verygoodsecurity.vgscollect.core.model.state.mapToFieldState
@@ -64,7 +62,11 @@ import com.verygoodsecurity.vgscollect.util.extension.toNetworkRequest
 import com.verygoodsecurity.vgscollect.util.extension.toTokenizationData
 import com.verygoodsecurity.vgscollect.view.InputFieldView
 import com.verygoodsecurity.vgscollect.view.card.getAnalyticName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID
 import java.util.concurrent.CopyOnWriteArrayList
@@ -82,13 +84,12 @@ class VGSCollect {
 
     private val tracker: AnalyticTracker
 
-    private var client: ApiClient
-    private val mainHandler: Handler = Handler(Looper.getMainLooper())
+    private var clientStorage: VgsApiTemporaryStorageImpl = VgsApiTemporaryStorageImpl()
 
     private var storage: InternalStorage
     private val storageErrorListener: StorageErrorListener = object : StorageErrorListener {
         override fun onStorageError(error: VGSError) {
-            error.toVGSResponse(context).also { r ->
+            error.toVGSResponse().also { r ->
                 notifyAllListeners(r, false)
                 VGSCollectLogger.warn(InputFieldView.TAG, r.localizeMessage)
                 submitEvent(isSuccess = false, requiresTokenization = false, code = r.errorCode)
@@ -104,6 +105,9 @@ class VGSCollect {
     private var cname: String? = null
     private var isSatelliteMode: Boolean = false
 
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val api = API()
+
     private constructor(
         context: Context,
         id: String,
@@ -114,14 +118,11 @@ class VGSCollect {
         this.context = context
         this.storage = InternalStorage(context, storageErrorListener)
         this.externalDependencyDispatcher = DependencyReceiver()
-        this.client = ApiClient.newHttpClient()
         this.baseURL = generateBaseUrl(id, environment, url, port)
         this.tracker =
-            CollectActionTracker(id, environment, UUID.randomUUID().toString(), isSatelliteMode)
+            CollectActionTracker(scope, id, environment, UUID.randomUUID().toString(), isSatelliteMode)
         cname?.let { configureHostname(it, id) }
         updateAgentHeader()
-
-        println("TEST:DD, " + Greeting().greet())
     }
 
     constructor(
@@ -243,9 +244,9 @@ class VGSCollect {
      * Preferably call it inside onDestroy system's callback.
      */
     fun onDestroy() {
-        client.cancelAll()
         responseListeners.clear()
         storage.clear()
+        scope.cancel()
     }
 
     /**
@@ -265,7 +266,7 @@ class VGSCollect {
      * @param path path for a request
      * @param method HTTP method
      */
-    fun submit(path: String, method: HTTPMethod = HTTPMethod.POST): VGSResponse {
+    fun submit(path: String, method: VGSHttpMethod = VGSHttpMethod.POST): VGSResponse {
         val request = VGSRequest.VGSRequestBuilder()
             .setPath(path)
             .setMethod(method)
@@ -283,13 +284,11 @@ class VGSCollect {
      */
     fun submit(request: VGSRequest): VGSResponse {
         var response: VGSResponse = VGSResponse.ErrorResponse()
-
         collectUserData(request) {
-            response = client.execute(
-                request.toNetworkRequest(baseURL, it)
-            ).toVGSResponse(context)
+            scope.launch(Dispatchers.Main) {
+                response = api.execute(request.toNetworkRequest(baseURL, it)).toVGSResponse()
+            }
         }
-
         return response
     }
 
@@ -319,7 +318,7 @@ class VGSCollect {
      */
     suspend fun submitAsync(
         path: String,
-        method: HTTPMethod = HTTPMethod.POST
+        method: VGSHttpMethod = VGSHttpMethod.POST
     ): VGSResponse = submitAsync(
         VGSRequest.VGSRequestBuilder()
             .setPath(path)
@@ -344,9 +343,7 @@ class VGSCollect {
      * @param path path for a request
      * @param method HTTP method
      */
-    fun asyncSubmit(
-        path: String, method: HTTPMethod
-    ) {
+    fun asyncSubmit(path: String, method: VGSHttpMethod) {
         val request = VGSRequest.VGSRequestBuilder()
             .setPath(path)
             .setMethod(method)
@@ -366,10 +363,11 @@ class VGSCollect {
 
     private fun submitAsyncRequest(request: VGSBaseRequest) {
         collectUserData(request) {
-            client.enqueue(request.toNetworkRequest(baseURL, it)) { r ->
-                mainHandler.post {
+            scope.launch {
+                val result = api.execute(request.toNetworkRequest(baseURL, it))
+                withContext(Dispatchers.Main) {
                     notifyAllListeners(
-                        r.toVGSResponse(),
+                        result.toVGSResponse(),
                         request.requiresTokenization
                     )
                 }
@@ -385,25 +383,25 @@ class VGSCollect {
             !request.fieldsIgnore && !validateFields(request.requiresTokenization) -> return
             !request.fileIgnore && !validateFiles(request.requiresTokenization) -> return
             !baseURL.isURLValid() -> notifyAllListeners(
-                VGSError.URL_NOT_VALID.toVGSResponse(context),
+                VGSError.URL_NOT_VALID.toVGSResponse(),
                 request.requiresTokenization
             )
 
             !context.hasInternetPermission() ->
                 notifyAllListeners(
-                    VGSError.NO_INTERNET_PERMISSIONS.toVGSResponse(context),
+                    VGSError.NO_INTERNET_PERMISSIONS.toVGSResponse(),
                     request.requiresTokenization
                 )
 
             !context.hasAccessNetworkStatePermission() ->
                 notifyAllListeners(
-                    VGSError.NO_NETWORK_CONNECTIONS.toVGSResponse(context),
+                    VGSError.NO_NETWORK_CONNECTIONS.toVGSResponse(),
                     request.requiresTokenization
                 )
 
             !context.isConnectionAvailable() ->
                 notifyAllListeners(
-                    VGSError.NO_NETWORK_CONNECTIONS.toVGSResponse(context),
+                    VGSError.NO_NETWORK_CONNECTIONS.toVGSResponse(),
                     request.requiresTokenization
                 )
 
@@ -446,7 +444,7 @@ class VGSCollect {
         storage.getAttachedFiles().forEach {
             if (it.size > storage.getFileSizeLimit()) {
                 notifyAllListeners(
-                    VGSError.FILE_SIZE_OVER_LIMIT.toVGSResponse(context, it.name),
+                    VGSError.FILE_SIZE_OVER_LIMIT.toVGSResponse(),
                     requiresTokenization
                 )
 
@@ -463,7 +461,7 @@ class VGSCollect {
 
         storage.getFieldsStorage().getItems().forEach {
             if (it.isValid.not()) {
-                VGSError.INPUT_DATA_NOT_VALID.toVGSResponse(context, it.fieldName).also { r ->
+                VGSError.INPUT_DATA_NOT_VALID.toVGSResponse().also { r ->
                     notifyAllListeners(r, requiresTokenization)
                     VGSCollectLogger.warn(InputFieldView.TAG, r.localizeMessage)
                     submitEvent(false, requiresTokenization, code = r.errorCode)
@@ -478,7 +476,7 @@ class VGSCollect {
 
     private fun prepareDataForCollecting(request: VGSRequest) =
         request.prepareUserDataForCollecting(
-            client.getTemporaryStorage().getCustomData(),
+            clientStorage.getCustomData(),
             storage.getData(
                 request.fieldNameMappingPolicy,
                 request.fieldsIgnore,
@@ -557,7 +555,7 @@ class VGSCollect {
      * @param headers The headers to save for request.
      */
     fun setCustomHeaders(headers: Map<String, String>?) {
-        client.getTemporaryStorage().setCustomHeaders(headers)
+        clientStorage.setCustomHeaders(headers)
     }
 
     /**
@@ -565,7 +563,7 @@ class VGSCollect {
      * This method has no impact on all custom data that were added with [VGSRequest]
      */
     fun resetCustomHeaders() {
-        client.getTemporaryStorage().resetCustomHeaders()
+        clientStorage.resetCustomHeaders()
     }
 
     /**
@@ -575,7 +573,7 @@ class VGSCollect {
      * @param data The Map to save for request.
      */
     fun setCustomData(data: Map<String, Any>?) {
-        client.getTemporaryStorage().setCustomData(data)
+        clientStorage.setCustomData(data)
     }
 
     /**
@@ -583,7 +581,7 @@ class VGSCollect {
      * This method has no impact on all custom data that were added with [VGSRequest]
      */
     fun resetCustomData() {
-        client.getTemporaryStorage().resetCustomData()
+        clientStorage.resetCustomData()
     }
 
     /**
@@ -615,11 +613,6 @@ class VGSCollect {
     @VisibleForTesting
     internal fun setStorage(store: InternalStorage) {
         storage = store
-    }
-
-    @VisibleForTesting
-    internal fun setClient(c: ApiClient) {
-        client = c
     }
 
     internal fun bindComposeView(view: InputFieldView?) {
@@ -683,10 +676,10 @@ class VGSCollect {
                     if (hasFiles) add("file")
                     if (hasFields) add("textField")
                     if (hasCustomHeader ||
-                        client.getTemporaryStorage().getCustomHeaders().isNotEmpty()
+                        clientStorage.getCustomHeaders().isNotEmpty()
                     ) add("custom_header")
                     if (hasCustomData ||
-                        client.getTemporaryStorage().getCustomData().isNotEmpty()
+                        clientStorage.getCustomData().isNotEmpty()
                     ) add("custom_data")
                     add(mappingPolicy.analyticsName)
                     this
@@ -773,28 +766,12 @@ class VGSCollect {
     private fun configureHostname(host: String, tnt: String) {
         if (host.isNotBlank() && baseURL.isNotEmpty()) {
             val r = VGSRequest.VGSRequestBuilder()
-                .setMethod(HTTPMethod.GET)
+                .setMethod(VGSHttpMethod.GET)
                 .setFormat(VGSHttpBodyFormat.PLAIN_TEXT)
                 .build()
                 .toNetworkRequest(host.toHostnameValidationUrl(tnt))
 
-            client.enqueue(r) {
-                hasCustomHostname = it.isSuccessful && host equalsUrl it.body
-                if (hasCustomHostname) {
-                    client.setHost(it.body)
-                } else {
-                    context.run {
-                        VGSCollectLogger.warn(
-                            message = String.format(
-                                getString(R.string.error_custom_host_wrong),
-                                host
-                            )
-                        )
-                    }
-                }
-
-                hostnameValidationEvent(hasCustomHostname, host)
-            }
+            // TODO: Implement
         }
     }
 
@@ -815,7 +792,7 @@ class VGSCollect {
     }
 
     private fun updateAgentHeader() {
-        client.getTemporaryStorage().setCustomHeaders(mapOf(generateAgentHeader(tracker.isEnabled)))
+        clientStorage.setCustomHeaders(mapOf(generateAgentHeader(tracker.isEnabled)))
     }
 
     /**

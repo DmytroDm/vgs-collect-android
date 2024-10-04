@@ -1,6 +1,5 @@
 package com.verygoodsecurity.vgscollect.api.client.extension
 
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
 import com.verygoodsecurity.vgscollect.core.api.client.extension.bodyToString
 import com.verygoodsecurity.vgscollect.core.api.client.extension.toRequestBodyOrNull
 import org.junit.Assert

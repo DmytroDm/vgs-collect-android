@@ -1,6 +1,6 @@
 package com.verygoodsecurity.vgscollect.core.api.client.extension
 
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
+import com.verygoodsecurity.mobile_networking.model.HTTPMethod
 import okhttp3.MediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.internal.EMPTY_REQUEST

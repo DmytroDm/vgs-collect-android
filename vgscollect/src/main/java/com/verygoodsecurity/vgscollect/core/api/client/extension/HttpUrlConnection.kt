@@ -1,6 +1,6 @@
 package com.verygoodsecurity.vgscollect.core.api.client.extension
 
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
+import com.verygoodsecurity.mobile_networking.model.HTTPMethod
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL

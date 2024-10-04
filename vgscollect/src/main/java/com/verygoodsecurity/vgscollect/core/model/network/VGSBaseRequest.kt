@@ -1,7 +1,6 @@
 package com.verygoodsecurity.vgscollect.core.model.network
 
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
-import com.verygoodsecurity.vgscollect.core.api.VGSHttpBodyFormat
+import com.verygoodsecurity.mobile_networking.model.VGSHttpBodyFormat
 import com.verygoodsecurity.vgscollect.core.model.VGSCollectFieldNameMappingPolicy
 
 /**
@@ -16,7 +15,7 @@ import com.verygoodsecurity.vgscollect.core.model.VGSCollectFieldNameMappingPoli
  * @property routeId
  */
 abstract class VGSBaseRequest {
-    abstract val method: HTTPMethod
+    abstract val method: VGSHttpMethod
     abstract val path: String
     abstract val customHeader: Map<String, String>
     abstract val customData: Map<String, Any>

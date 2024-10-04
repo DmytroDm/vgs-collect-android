@@ -1,15 +1,12 @@
 package com.verygoodsecurity.vgscollect.core.api.client
 
+import com.verygoodsecurity.mobile_networking.model.NetworkRequest
+import com.verygoodsecurity.mobile_networking.model.NetworkResponse
 import com.verygoodsecurity.vgscollect.BuildConfig
 import com.verygoodsecurity.vgscollect.core.api.VgsApiTemporaryStorage
-import com.verygoodsecurity.vgscollect.core.api.VgsApiTemporaryStorageImpl
 import com.verygoodsecurity.vgscollect.core.api.analityc.CollectActionTracker
-import com.verygoodsecurity.vgscollect.core.model.network.NetworkRequest
-import com.verygoodsecurity.vgscollect.core.model.network.NetworkResponse
 
 internal interface ApiClient {
-
-    fun setHost(url: String?)
 
     fun enqueue(request: NetworkRequest, callback: ((NetworkResponse) -> Unit)? = null)
 
@@ -25,12 +22,6 @@ internal interface ApiClient {
         private const val TEMPORARY_AGENT_TEMPLATE =
             "source=androidSDK&medium=vgs-collect&content=%s&vgsCollectSessionId=%s&tr=%s"
 
-        fun newHttpClient(
-            isLogsVisible: Boolean = true,
-            storage: VgsApiTemporaryStorage? = null
-        ): ApiClient {
-            return OkHttpClient(isLogsVisible, storage ?: VgsApiTemporaryStorageImpl())
-        }
 
         fun generateAgentHeader(isAnalyticsEnabled: Boolean): Pair<String, String> =
             AGENT to String.format(

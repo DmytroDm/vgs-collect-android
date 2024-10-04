@@ -14,9 +14,9 @@ import com.verygoodsecurity.demoapp.StartActivity.Companion.KEY_BUNDLE_PATH
 import com.verygoodsecurity.demoapp.StartActivity.Companion.KEY_BUNDLE_VAULT_ID
 import com.verygoodsecurity.demoapp.databinding.ActivityDateRangeBinding
 import com.verygoodsecurity.demoapp.databinding.CodeExampleLayoutBinding
-import com.verygoodsecurity.vgscollect.core.HTTPMethod
 import com.verygoodsecurity.vgscollect.core.VGSCollect
 import com.verygoodsecurity.vgscollect.core.VgsCollectResponseListener
+import com.verygoodsecurity.vgscollect.core.model.network.VGSHttpMethod
 import com.verygoodsecurity.vgscollect.core.model.network.VGSRequest
 import com.verygoodsecurity.vgscollect.core.model.network.VGSResponse
 import com.verygoodsecurity.vgscollect.core.model.state.FieldState
@@ -165,7 +165,7 @@ class DateRangeActivity : AppCompatActivity(), VgsCollectResponseListener, OnFie
     private fun submit() {
         setLoading(true)
         val request: VGSRequest = VGSRequest.VGSRequestBuilder()
-            .setMethod(HTTPMethod.POST)
+            .setMethod(VGSHttpMethod.POST)
             .setPath(path)
             .setCustomHeader(mapOf("custom-header-name" to "value"))
             .setCustomData(mapOf("custom_data" to "value"))

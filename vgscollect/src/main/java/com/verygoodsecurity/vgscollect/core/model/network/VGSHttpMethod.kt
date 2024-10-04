@@ -1,11 +1,11 @@
-package com.verygoodsecurity.vgscollect.core
+package com.verygoodsecurity.vgscollect.core.model.network
 
 /**
  *  The set of common methods for HTTP.
  *
  *  @version 1.0.0
  */
-enum class HTTPMethod {
+enum class VGSHttpMethod {
 
     /**
      *  HTTP GET method

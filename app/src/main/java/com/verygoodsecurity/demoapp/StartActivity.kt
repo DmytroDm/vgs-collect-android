@@ -60,8 +60,8 @@ class StartActivity : AppCompatActivity(R.layout.activity_start) {
 
     private fun startActivity(activity: Class<out Activity>) {
         startActivity(Intent(this, activity).apply {
-            putExtra(KEY_BUNDLE_VAULT_ID, binding.tiedVaultId.text.toString())
-            putExtra(KEY_BUNDLE_PATH, binding.tiedPath.text.toString())
+            putExtra(KEY_BUNDLE_VAULT_ID, "tntt1rsray8")
+            putExtra(KEY_BUNDLE_PATH, "/post")
             putExtra(KEY_BUNDLE_ENVIRONMENT, getEnvironment())
         })
     }
